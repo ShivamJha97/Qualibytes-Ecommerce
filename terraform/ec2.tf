@@ -1,13 +1,13 @@
 data "aws_ami" "os_image" {
-  owners = ["099720109477"]
+  owners      = ["099720109477"]
   most_recent = true
   filter {
     name   = "state"
     values = ["available"]
   }
   filter {
-    name = "name"
-    values = ["ubuntu/images/hvm-ssd-gp3/*24.04-amd64*"]
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-amd64-server*"]
   }
 }
 
@@ -64,7 +64,7 @@ resource "aws_security_group" "allow_user_to_connect" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-    ingress {
+  ingress {
     description = "port 8080 allow"
     from_port   = 30000
     to_port     = 32000
@@ -79,10 +79,10 @@ resource "aws_security_group" "allow_user_to_connect" {
 
 resource "aws_instance" "testinstance" {
   ami             = data.aws_ami.os_image.id
-  instance_type   = var.instance_type 
+  instance_type   = var.instance_type
   key_name        = aws_key_pair.deployer.key_name
   security_groups = [aws_security_group.allow_user_to_connect.name]
-  user_data = file("${path.module}/install_tools.sh")
+  user_data       = file("${path.module}/install_tools.sh")
   tags = {
     Name = "Jenkins-Automate"
   }
@@ -90,5 +90,5 @@ resource "aws_instance" "testinstance" {
     volume_size = 25
     volume_type = "gp3"
   }
-  
+
 }
